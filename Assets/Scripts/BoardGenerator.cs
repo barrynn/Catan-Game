@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class BoardGenerator : MonoBehaviour
 {
@@ -12,13 +13,26 @@ public class BoardGenerator : MonoBehaviour
     private int wheat = 4;
     private int forest = 4;
     public GameObject[] tiles;
+    private int[] numbers = { 2, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 12 };
 
     void Start()
     {
         ShuffleTiles();
-        for(int i = 0; i < tiles.Length; i++)
+        ShuffleNumbers();
+        int numTileCount = 0;
+        for (int i = 0; i < tiles.Length; i++)
         {
-            GameObject tile = Instantiate(tiles[i], tileLocations[i].position, tileLocations[i].rotation); ;
+            GameObject tile = Instantiate(tiles[i], tileLocations[i].position, tileLocations[i].rotation);
+            //print(tiles[i].name);
+            if (tiles[i].name != "Desert TIle")
+            {
+                GameObject text = tile.transform.GetChild(1).gameObject;
+                TMP_Text numberTile = text.GetComponent<TMP_Text>();
+
+                numberTile.text = numbers[numTileCount].ToString();
+                numberTile.autoSizeTextContainer = true;
+                numTileCount++;
+            }
             tile.transform.SetParent(tileLocations[i]);
         }
     }
@@ -32,6 +46,17 @@ public class BoardGenerator : MonoBehaviour
             GameObject tmp = tiles[i];
             tiles[i] = tiles[r];
             tiles[r] = tmp;
+        }
+    }
+
+    private void ShuffleNumbers()
+    {
+        for (int i = numbers.Length - 1; i > 0; i--)
+        {
+            var r = Random.Range(0, i);
+            int tmp = numbers[i];
+            numbers[i] = numbers[r];
+            numbers[r] = tmp;
         }
     }
 
