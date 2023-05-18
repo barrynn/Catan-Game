@@ -19,25 +19,10 @@ public class BoardGenerator : MonoBehaviour
     {
         ShuffleTiles();
         ShuffleNumbers();
-        int numTileCount = 0;
-        for (int i = 0; i < tiles.Length; i++)
-        {
-            GameObject tile = Instantiate(tiles[i], tileLocations[i].position, tileLocations[i].rotation);
-            //print(tiles[i].name);
-            if (tiles[i].name != "Desert TIle")
-            {
-                GameObject text = tile.transform.GetChild(1).gameObject;
-                TMP_Text numberTile = text.GetComponent<TMP_Text>();
-
-                numberTile.text = numbers[numTileCount].ToString();
-                numberTile.autoSizeTextContainer = true;
-                numTileCount++;
-            }
-            tile.transform.SetParent(tileLocations[i]);
-        }
+        PlaceNumAndTiles();
     }
 
-
+    //shuffles the tiles for random placement
     private void ShuffleTiles()
     {
         for (int i = tiles.Length- 1; i > 0; i--)
@@ -49,6 +34,7 @@ public class BoardGenerator : MonoBehaviour
         }
     }
 
+    //shuffles the numbers for random placements
     private void ShuffleNumbers()
     {
         for (int i = numbers.Length - 1; i > 0; i--)
@@ -59,6 +45,33 @@ public class BoardGenerator : MonoBehaviour
             numbers[r] = tmp;
         }
     }
+
+    //places the tiles and the numbers that go with it
+    private void PlaceNumAndTiles()
+    {
+        int numTileCount = 0;
+        for (int i = 0; i < tiles.Length; i++)
+        {
+            GameObject tile = Instantiate(tiles[i], tileLocations[i].position, tileLocations[i].rotation);
+            //print(tiles[i].name);
+            if (tiles[i].name != "Desert Tile")
+            {
+                GameObject text = tile.transform.GetChild(1).GetChild(0).gameObject;
+                TMP_Text numberTile = text.GetComponent<TMP_Text>();
+
+                numberTile.text = numbers[numTileCount].ToString();
+                if (numbers[numTileCount] == 6 || numbers[numTileCount] == 8)
+                {
+                    text.GetComponent<TextMeshProUGUI>().faceColor = Color.red;
+                }
+                numberTile.autoSizeTextContainer = true;
+                numTileCount++;
+
+            }
+            tile.transform.SetParent(tileLocations[i]);
+        }
+    }
+
 
 
     // Update is called once per frame
